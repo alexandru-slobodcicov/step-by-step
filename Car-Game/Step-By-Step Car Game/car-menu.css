@@ -1,0 +1,203 @@
+/* =====================================================================
+   Meniurile jocului "Mașinuțe 3D" – aplicarea lecției CSS despre meniuri.
+   Clasele de bază (.topnav, .sidenav, .overflow-scroll, .active) vin din
+   styles.css (lecția). Aici le extindem pentru joc:
+     1. Meniu orizontal .topnav  -> float, overflow: hidden, :hover, .active
+     2. Dropdown                 -> position: absolute + afișare la :hover
+     3. Meniu vertical .sidenav  -> overflow-y: auto (scroll vertical)
+     4. Meniu cu overflow-x      -> scroll orizontal, white-space: nowrap
+     5. text-decoration          -> underline / overline / wavy / line-through
+   ===================================================================== */
+
+/* styles.css adaugă padding pe body (pentru pagina lecției) – îl anulăm aici */
+body { padding: 0; }
+
+.game-wrap { width: fit-content; }
+
+/* ---------- 1. Meniul principal (.topnav din lecție) ---------- */
+.game-nav {
+  border-radius: 8px;
+  margin-bottom: 10px;
+  /* overflow: hidden vine din .topnav: "curăță" elementele float din interior */
+}
+
+.game-nav a.right { float: right; }      /* link aliniat la dreapta cu float */
+.game-nav a.right:hover { text-decoration: line-through; }
+
+/* ---------- 2. Dropdown ---------- */
+.dropdown {
+  float: left;                            /* stă pe același rând cu link-urile */
+  overflow: hidden;
+}
+
+/* butonul arată la fel ca link-urile din .topnav */
+.dropdown .dropbtn {
+  font-size: 17px;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  color: #f2f2f2;
+  padding: 14px 16px;
+  background-color: inherit;
+  margin: 0;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropbtn,
+.dropdown:focus-within .dropbtn {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Conținutul e ascuns implicit. Cu position: absolute și fără un părinte
+   poziționat, NU este tăiat de overflow: hidden al meniului. */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 190px;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 6px 6px;
+  z-index: 10;
+}
+
+.dropdown-content.colors {
+  max-height: 260px;
+  overflow-y: auto;                       /* scroll vertical dacă sunt multe culori */
+}
+
+.dropdown-content a {
+  float: none;                            /* anulăm float-ul din .topnav a */
+  display: block;
+  color: #222;
+  padding: 10px 16px;
+  text-align: left;
+  text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+  display: block;                         /* afișăm submeniul la hover */
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+  text-decoration: underline wavy #04AA6D 2px;
+}
+
+.dropdown-content a.active,
+.garage .sidenav a.active,
+.color-strip a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+/* bulina de culoare din meniuri */
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  vertical-align: middle;
+}
+
+/* ---------- Așezarea jocului + garaj ---------- */
+.game-layout {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.garage {
+  width: 330px;
+  box-sizing: border-box;
+  padding: 12px;
+  background: #2a2a3c;
+  border-radius: 8px;
+}
+
+.garage h3, .garage h4 { margin: 4px 0 10px; }
+.garage.hidden, .panel.hidden { display: none; }
+
+.garage-body {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+/* ---------- 3. Meniu vertical (.sidenav din lecție) ---------- */
+.garage .sidenav {
+  width: 140px;
+  height: 170px;                          /* înălțime fixă -> apare scroll vertical */
+  border-radius: 6px;
+  flex-shrink: 0;
+  /* overflow-y: auto vine din .sidenav; la hover: underline overline */
+}
+
+.garage-details { flex: 1; font-size: 13px; }
+.garage-details strong { display: block; margin-bottom: 8px; font-size: 15px; }
+
+.stat { margin-bottom: 8px; }
+.stat .bar {
+  height: 8px;
+  margin-top: 3px;
+  background: #444;
+  border-radius: 4px;
+  overflow: hidden;                       /* bara interioară nu iese din container */
+}
+.stat .bar span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #04AA6D, #8bc34a);
+}
+
+/* ---------- 4. Meniu orizontal cu scroll (.overflow-scroll din lecție) ---------- */
+.color-strip.overflow-scroll {
+  width: 100%;                            /* suprascrie lățimea de 400px din lecție */
+  border-radius: 6px;
+}
+
+.color-strip a {
+  padding: 10px 12px;
+  font-size: 14px;
+}
+
+.color-strip a:hover { text-decoration: overline; }
+
+.custom-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.garage-close {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #04AA6D;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.garage-close:hover { background: #038a59; }
+
+/* ---------- 5. Panoul de ajutor + text-decoration ---------- */
+.panel {
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: #2a2a3c;
+  border-radius: 8px;
+}
+
+.panel p.help { margin: 6px 0; }
+.panel kbd {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #444;
+  text-decoration: underline dotted #aaa;
+}

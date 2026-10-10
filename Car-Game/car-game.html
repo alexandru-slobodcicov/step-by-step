@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mașinuțe 3D - Plajă</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="car-menu.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #1e1e2e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    h1 { margin: 10px 0; }
+    .hud { display: flex; gap: 30px; font-size: 18px; margin-bottom: 10px; }
+    #stage {
+      position: relative;
+      width: 760px;
+      height: 600px;
+      border: 4px solid #444;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #87ceeb;
+    }
+    #stage canvas { display: block; }
+    #overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+    #overlay.hidden { display: none; }
+    #overlay .title { font-size: 40px; font-weight: bold; }
+    #overlay .info { font-size: 18px; }
+    #warning {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      background: #ff1744;
+      animation: blink 0.5s steps(1) infinite;
+    }
+    #warning.hidden { display: none; }
+    @keyframes blink { 50% { background: #ffc107; color: #000; } }
+    .controls { margin-top: 10px; display: flex; gap: 10px; }
+    .controls button {
+      font-size: 22px; padding: 10px 24px; border: none; border-radius: 6px;
+      background: #4caf50; color: #fff; cursor: pointer;
+    }
+    .controls button:hover { background: #43a047; }
+    .controls button.brake { background: #e53935; user-select: none; }
+    .controls button.gas { background: #1e88e5; user-select: none; }
+    .controls button.gas:active { background: #0d47a1; }
+    .controls button.brake:active { background: #b71c1c; }
+    p.help { color: #aaa; margin-top: 8px; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>🏎️ Mașinuțe 3D - Plajă</h1>
+  <div class="game-wrap">
+  <!-- Meniu orizontal (.topnav) cu dropdown-uri; elementele sunt generate din JS -->
+  <nav class="topnav game-nav" id="game-nav">
+    <a href="#joc" class="active" data-panel="">Joc</a>
+    <div class="dropdown">
+      <button class="dropbtn" type="button">Vehicul ▾</button>
+      <div class="dropdown-content" id="vehicle-dropdown"></div>
+    </div>
+    <div class="dropdown">
+      <button class="dropbtn" type="button">Culoare ▾</button>
+      <div class="dropdown-content colors" id="color-dropdown"></div>
+    </div>
+    <a href="#garaj" data-panel="garage">Garaj</a>
+    <a href="#ajutor" data-panel="help">Ajutor</a>
+    <a href="index.html" class="right">Lecția CSS</a>
+  </nav>
+  <div class="hud">
+    <span>Scor: <b id="score">0</b></span>
+    <span>Record: <b id="best">0</b></span>
+    <span>Viteză: <b id="speed">0 km/h</b></span>
+    <span>Moment: <b id="daytime">Zi</b></span>
+  </div>
+  <div class="game-layout">
+    <div id="stage">
+      <div id="warning" class="hidden">PIETONI! FRÂNEAZĂ! (↓)</div>
+      <div id="overlay">
+        <div class="title" id="overlay-title">Se încarcă...</div>
+        <div class="info" id="overlay-reason"></div>
+        <div class="info" id="overlay-score"></div>
+        <div class="info" id="overlay-hint"></div>
+      </div>
+    </div>
+
+    <aside class="garage hidden" id="garage">
+      <h3>Garaj - personalizează vehiculul</h3>
+      <div class="garage-body">
+        <!-- Meniu vertical (.sidenav) cu overflow-y: auto -->
+        <nav class="sidenav" id="garage-types"></nav>
+        <div class="garage-details">
+          <strong id="garage-name"></strong>
+          <div id="garage-stats"></div>
+        </div>
+      </div>
+      <h4>Culoare</h4>
+      <!-- Meniu orizontal cu scroll (.overflow-scroll) -->
+      <nav class="topnav overflow-scroll color-strip" id="garage-colors"></nav>
+      <label class="custom-color">Culoare proprie: <input type="color" id="custom-color"></label>
+      <button class="garage-close" id="garage-close" type="button">Gata</button>
+    </aside>
+  </div>
+  <div class="controls">
+    <button id="left">◀</button>
+    <button id="start">Start</button>
+    <button id="right">▶</button>
+    <button id="gas" class="gas">Accelerează ▲</button>
+    <button id="brake" class="brake">Frână ▼</button>
+  </div>
+  <section class="panel hidden" id="help-panel">
+    <p class="help"><kbd>←</kbd> <kbd>→</kbd> (A / D) schimbă banda. <kbd>↑</kbd> (W) = accelerează.
+      <kbd>↓</kbd> (S) = frână. <kbd>Space</kbd> = pauză.</p>
+    <p class="help">Benzile din stânga sunt mai rapide. Oprește la pietoni și la roșu, altfel vine poliția!
+      Când te prinde poliția, oprește complet ca să primești doar amendă.</p>
+    <p class="help">Ferește-te de bălți (derapaj)! Ziua și noaptea alternează la fiecare minut;
+      după fiecare tunel se schimbă cerul. Din meniul Garaj alegi vehiculul și culoarea.</p>
+  </section>
+  </div>
+  <script src="car-game.js"></script>
+</body>
+</html>
