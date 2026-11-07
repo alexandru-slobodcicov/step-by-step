@@ -1,0 +1,319 @@
+:root {
+  --ink: #123e47;
+  --teal: #147c78;
+  --paper: #f6fcf9;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", sans-serif;
+  background: radial-gradient(ellipse at 85% 0%, #c3eadc, transparent 65%), linear-gradient(#d9edf1, #eff6e9);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+header { text-align: center; padding: 1.5rem 1rem 0.5rem; }
+header h1 { margin: 0; font-family: Georgia, serif; font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 400; letter-spacing: -0.04em; }
+header p { margin: 0.3rem 0 0; }
+
+main {
+  display: grid;
+  grid-template-columns: minmax(280px, 380px) 1fr;
+  gap: 1.5rem;
+  max-width: 1320px;
+  margin: 1rem auto;
+  padding: 0 1rem 2rem;
+}
+
+@media (max-width: 800px) { main { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--paper);
+  border: 1px solid #ffffffb3;
+  border-radius: 18px;
+  padding: 1.2rem;
+  box-shadow: 0 4px 16px rgba(18, 50, 74, 0.12);
+}
+
+.panel h2, .panel h3 { margin-top: 0; }
+
+form { display: flex; gap: 0.5rem; }
+
+input[type="text"], textarea {
+  flex: 1;
+  width: 100%;
+  padding: 0.55rem;
+  border: 1px solid #9cc3dd;
+  border-radius: 6px;
+  font: inherit;
+}
+
+textarea { resize: vertical; margin: 0.3rem 0 0.5rem; }
+
+button {
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #2a7fb8;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+button:hover:not(:disabled) { filter: brightness(1.1); }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid #e8ab38; outline-offset: 3px; }
+button.secondary { background: #5a9bc4; }
+button.primary { background: #1d9a6c; font-weight: 600; flex: 1; }
+button.danger { background: #c94a4a; }
+
+.hint { font-size: 0.85rem; color: #4d6b80; display: block; margin-top: 0.8rem; }
+
+#people-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+#people-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #e3eef5;
+}
+
+#people-list li button {
+  background: transparent;
+  color: #c94a4a;
+  padding: 0 0.4rem;
+  font-size: 1.1rem;
+}
+
+.actions { display: flex; gap: 0.5rem; }
+
+/* Pond */
+.pond {
+  position: relative;
+  height: 460px;
+  isolation: isolate;
+  border-radius: 12px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% -10%, #d5f6d9 0%, #6ac5bc 22%, transparent 65%), linear-gradient(#429d9f, #155365);
+  box-shadow: inset 0 1px 15px #153e4540;
+}
+
+.pond-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.8rem; margin-bottom: 1rem; }
+.pond-badge { color: var(--teal); font-size: 0.72rem; font-weight: bold; letter-spacing: 0.14em; }
+.environment-control { display: flex; align-items: center; flex-wrap: wrap; gap: 0.4rem; font-size: 0.8rem; margin-left: auto; }
+.environment-control select { font: inherit; color: var(--ink); background: #fff; padding: 0.45rem 1.7rem 0.45rem 0.55rem; border: 1px solid #9cc3dd; border-radius: 6px; cursor: pointer; }
+.environment-control select:disabled { cursor: not-allowed; opacity: 0.6; }
+.pond-toolbar button { font-size: 0.8rem; background: #e1efea; color: var(--ink); }
+#pond-canvas { display: block; width: 100%; height: 100%; position: absolute; inset: 0; }
+.water-light { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(110deg, transparent 0 12%, #e8ffd009 14%, transparent 24%); }
+.fisherman, .r2d2, .support-demon { position: absolute; top: 8px; left: 8px; width: clamp(155px, 30%, 240px); height: auto; z-index: 50; pointer-events: none; filter: drop-shadow(0 4px 3px #123e4720); }
+.r2d2, .space-sky { display: none; }
+.support-demon, .support-station, .hell-office, .hell-signs { display: none; }
+.fishing-wire { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 59; pointer-events: none; opacity: 0; }
+.fishing-wire.active { opacity: 1; }
+.fishing-wire path { fill: none; stroke: #eef5df; stroke-width: 1.5; stroke-linecap: round; }
+.pond.fighting .fishing-wire path { stroke: #ffe49d; }
+.fish.approaching { transition: left 1.2s ease-in-out, top 1.2s ease-in-out; }
+.pond-empty { position: absolute; top: 32%; left: 0; width: 100%; margin: 0; padding: 1rem; text-align: center; color: #effff4; font: 1.7rem Georgia, serif; text-shadow: 0 2px 14px #174f60; }
+.pond-empty small { display: inline-block; margin-top: 0.7rem; font: 0.85rem "Trebuchet MS", sans-serif; }
+
+.fish {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: left 2.5s ease-in-out, top 2.5s ease-in-out, opacity 0.6s;
+}
+
+.fish .body { width: 38px; height: 23px; border-radius: 55% 60% 60% 55%; display: inline-block; position: relative; background: linear-gradient(#ffdc72, #e98531); box-shadow: inset 0 -4px 5px #a44c3955; }
+.fish .body::before { content: ""; position: absolute; top: 2px; left: -12px; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-left: 14px solid #f4a345; }
+.fish .body::after { content: ""; position: absolute; top: 6px; right: 7px; width: 5px; height: 5px; background: #123e47; border-radius: 50%; }
+.fish.flip .body { transform: scaleX(-1); }
+.fish.shark .body { width: 57px; height: 20px; background: linear-gradient(#60808b 48%, #e2ebe5 52%); }
+.fish.shark .body::before { border-left-color: #65838b; border-top-width: 16px; border-bottom-width: 16px; top: -6px; }
+.fish.sea-bass .body { width: 45px; background: linear-gradient(#6b8e69, #a1b29b 42%, #3f665c 47% 54%, #d7ded1 60%); }
+.fish.sea-bass .body::before { border-left-color: #829b7b; }
+.fish.clownfish .body { background: linear-gradient(90deg, #f58a26 14%, #283d40 15% 18%, #fff8e6 19% 28%, #283d40 29% 32%, #f58a26 33% 53%, #283d40 54% 57%, #fff8e6 58% 69%, #283d40 70% 73%, #f58a26 74%); }
+.fish.fighting .body { animation: thrash 0.18s ease-in-out infinite alternate; }
+.fish.fighting .label, .is-3d .fish.fighting .label { background: #ffe49d; color: var(--ink); text-shadow: none; }
+.fish.escaped .body { animation: dart 0.7s ease-out; }
+.is-3d .fish { transform: translate(-50%, 0) scale(var(--fish-scale, 1)); transition: opacity 0.6s; max-width: 150px; }
+.is-3d .fish .body { display: none; }
+.is-3d .fish .label { background: #093c4d80; border: 1px solid #dcf8e64d; border-radius: 20px; padding: 0.18rem 0.55rem; overflow: hidden; text-overflow: ellipsis; }
+.fish .label { max-width: 150px; overflow: hidden; text-overflow: ellipsis; }
+
+.fish.caught {
+  transition: left 0.8s ease, top 1.2s ease-in;
+  z-index: 5;
+}
+.fish.caught .label {
+  background: #ffd84d;
+  color: #12324a;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  text-shadow: none;
+}
+.fish.faded { opacity: 0.25; }
+
+.line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 60;
+  opacity: 0;
+  pointer-events: none;
+}
+.line.active { opacity: 1; }
+.is-3d .line { transition: none; }
+.hook {
+  position: absolute;
+  bottom: -10px;
+  left: -5px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.result {
+  min-height: 3rem;
+  margin: 1rem 0;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+.result.win { color: #1d9a6c; animation: pop 0.5s ease; }
+.result.escape, #history li.escape { color: #997017; }
+
+@keyframes thrash {
+  from { rotate: -22deg; translate: -7px 5px; }
+  to { rotate: 20deg; translate: 8px -6px; }
+}
+@keyframes dart {
+  35% { translate: 22px 12px; }
+  70% { translate: -10px 4px; }
+}
+
+@keyframes pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+#history { padding-left: 1.4rem; margin: 0; }
+#history li { padding: 0.15rem 0; }
+#history { max-height: 200px; overflow-y: auto; }
+
+body.space-theme { background: radial-gradient(ellipse at 85% 0%, #b9cfe4, transparent 65%), linear-gradient(#e5eaf1, #f5f3e9); }
+.space-theme header h1 { color: #293d56; }
+.space-theme .pond-badge { color: #425d82; }
+.space-theme button.primary { background: #365e89; }
+.space-theme .environment-control select { border-color: #b4974d; }
+.pond.space {
+  background: radial-gradient(ellipse at 75% 20%, #18366566, transparent 55%), radial-gradient(ellipse at 20% 90%, #1b466240, transparent 50%), #060e20;
+  box-shadow: inset 0 0 45px #0008;
+}
+.space .space-sky { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.space .fisherman, .space .water-light { display: none; }
+.space .r2d2 { display: block; filter: drop-shadow(0 0 12px #75c6ff30); }
+.space .fishing-wire path { stroke: #8cf2ff; stroke-width: 2; filter: drop-shadow(0 0 4px #51d8ff); }
+.space.fighting .fishing-wire path { stroke: #ffdd84; }
+.space .hook { width: 14px; height: 14px; bottom: -7px; left: -7px; border: 2px solid #8cf2ff; border-radius: 50%; box-shadow: 0 0 9px #51d8ff; }
+.space.casting .blaster-flash { animation: blaster-glow 0.8s ease-in-out infinite alternate; }
+.space .pond-empty { text-shadow: 0 2px 14px #000; color: #e9f0ff; }
+.space.is-3d .fish .label { background: #0b173bcc; border-color: #b5d2f766; }
+.space.is-3d .fish.fighting .label, .space.is-3d .fish.caught .label { background: #ffe49d; color: #123e47; }
+
+/* Distinct spacecraft silhouettes also work without WebGL. */
+.space .fish .body { box-shadow: none; }
+.space .fish.clownfish .body { width: 38px; height: 13px; border-radius: 70% 90% 90% 70%; background: linear-gradient(#e8edf2, #7e93ab); }
+.space .fish.clownfish .body::before { width: 25px; height: 33px; left: 0; top: -10px; border: 0; background: #b5c1d0; clip-path: polygon(0 0, 100% 20%, 35% 50%, 100% 80%, 0 100%, 20% 50%); }
+.space .fish.clownfish .body::after { width: 12px; height: 7px; top: 3px; right: 12px; background: #345c85; border-radius: 60%; }
+.space .fish.shark .body { width: 57px; height: 25px; border-radius: 0; background: linear-gradient(#e8eef2, #7f91a6); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.space .fish.shark .body::before { width: 16px; height: 9px; top: 8px; left: 6px; border: 0; background: #3a4d66; }
+.space .fish.shark .body::after { display: none; }
+.space .fish.sea-bass .body { width: 32px; height: 32px; background: radial-gradient(circle, #719aba 0 24%, #192b44 26% 45%, #a1b1c5 47% 63%, transparent 65%); border-radius: 0; border-left: 6px solid #8b9eb6; border-right: 6px solid #8b9eb6; }
+.space .fish.sea-bass .body::before, .space .fish.sea-bass .body::after { display: none; }
+
+@keyframes blaster-glow { from { opacity: 0.25; } to { opacity: 0.85; } }
+
+/* The complaints department: warm lava, cold corporate hospitality. */
+body.hell-theme {
+  --ink: #4c302a;
+  --teal: #a13d28;
+  --paper: #fff6e5;
+  background: repeating-linear-gradient(0deg, transparent 0 31px, #8d402007 32px), radial-gradient(ellipse at 85% 0%, #f3bb83, transparent 65%), linear-gradient(#ebdbc2, #f9eddb);
+}
+.hell-theme header h1 { color: #8f301f; }
+.hell-theme header p { color: #765044; }
+.hell-theme button { background: #9f5038; }
+.hell-theme button.primary { background: #ab3c27; }
+.hell-theme button.danger { background: #734637; }
+.hell-theme .hint { color: #775b4b; }
+.hell-theme .environment-control select { border-color: #bb8a62; max-width: 100%; }
+.hell-theme .result.win { color: #846020; }
+.hell-theme .result.escape, .hell-theme #history li.escape { color: #a23a28; }
+.pond.hell { background: radial-gradient(ellipse at 50% 100%, #ffc56b, transparent 65%), #4b2827; box-shadow: inset 0 0 40px #48161088; }
+.hell .hell-office { display: block; position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.hell .fisherman, .hell .water-light { display: none; }
+.hell .support-station { display: block; position: absolute; top: 10px; left: 10px; width: clamp(160px, 29%, 225px); height: clamp(160px, 21vw, 205px); z-index: 46; border: 3px solid #b28762; border-radius: 65px 65px 8px 8px; background: radial-gradient(ellipse at 40% 32%, #fff6d6, #e8c99b 74%); box-shadow: 6px 7px 0 #221c1c88, inset 0 0 0 5px #f5dfb9; pointer-events: none; }
+.hell .support-demon { display: block; top: 18px; left: 10px; width: clamp(215px, 38%, 300px); filter: drop-shadow(0 2px 1px #49271c44); }
+.hell .hell-signs { display: flex; position: absolute; top: 12px; right: 12px; left: 42%; flex-direction: column; align-items: flex-end; gap: 7px; z-index: 45; pointer-events: none; font: bold 10px "Courier New", monospace; text-align: center; }
+.hell-motto { padding: 8px 10px; border: 2px solid #d1a778; color: #ffe0aa; background: #422b27; box-shadow: 3px 3px 0 #271a19; animation: support-sign 7s step-end infinite; }
+.hell-queue { padding: 5px 8px; background: #232924; color: #d8d78c; font-size: 9px; }
+.hell-thermostat { padding: 5px; background: #f3e7c9; color: #593e34; border: 2px solid #ad9984; }
+.hell-thermostat small { font-size: 7px; }
+.hell .fishing-wire path { stroke: #f8d89e; stroke-width: 2; stroke-dasharray: 4 2; }
+.hell.fighting .fishing-wire path { stroke: #fff7dc; }
+.hell .hook { width: 23px; height: 29px; bottom: -19px; left: -11px; border: 2px solid #9c492e; border-radius: 3px; background: #ffefbe; box-shadow: 0 2px 5px #5c261a66; }
+.hell .hook::after { content: "REAL\A PERSON"; white-space: pre; display: block; padding-top: 5px; text-align: center; font: bold 6px "Courier New", monospace; color: #6b2e20; }
+.hell .pond-empty { color: #fff6df; text-shadow: 0 2px 10px #4c1c15; }
+.hell.is-3d .fish .label { background: #48251ed9; border-color: #f8d7a980; }
+.hell.is-3d .fish.fighting .label, .hell.is-3d .fish.caught .label { background: #ffe49d; color: #4c302a; }
+
+/* Recognizable callers in the no-WebGL fallback, not recolored fish. */
+.hell .fish .body { box-shadow: none; }
+.hell .fish.clownfish .body { width: 35px; height: 42px; border-radius: 50% 50% 10% 10%; background: linear-gradient(#fff8dc, #c6ded0); clip-path: polygon(0 100%, 0 40%, 8% 15%, 25% 2%, 73% 2%, 94% 18%, 100% 40%, 100% 100%, 75% 86%, 50% 100%, 25% 86%); }
+.hell .fish.clownfish .body::before { left: 8px; top: 15px; width: 5px; height: 7px; border: 0; background: #5c3332; border-radius: 50%; box-shadow: 14px 0 #5c3332; }
+.hell .fish.clownfish .body::after { left: 12px; top: 29px; width: 11px; height: 5px; border-radius: 50%; background: #5c3332; }
+.hell .fish.shark .body { width: 62px; height: 46px; border-radius: 5px; background: linear-gradient(90deg, transparent 35%, #e5ad58 36% 43%, transparent 44%), linear-gradient(#33333a, #57515a); border-bottom: 4px solid #24252a; }
+.hell .fish.shark .body::before { left: 0; top: -10px; width: 19px; height: 22px; border: 0; border-radius: 45%; background: #d9714f; box-shadow: 21px -4px #e0955f, 42px 0 #d9714f; }
+.hell .fish.shark .body::after { content: "NO  NO  NO"; left: 0; top: -3px; width: 62px; height: 12px; background: none; border-radius: 0; font: bold 7px "Courier New", monospace; color: #492b27; text-align: center; }
+.hell .fish.sea-bass .body { width: 48px; height: 31px; border-radius: 4px; background: linear-gradient(#a5a696 25%, #e5dcc5 26% 70%, #6b6960 71%); border: 2px solid #56554e; }
+.hell .fish.sea-bass .body::before { left: 6px; top: -15px; width: 31px; height: 18px; border: 0; border-radius: 0; background: repeating-linear-gradient(#fff1c8 0 4px, #aa4d35 5px 6px); transform: skew(-8deg); }
+.hell .fish.sea-bass .body::after { right: 5px; top: 12px; width: 5px; height: 5px; background: #eb5d35; box-shadow: -25px 0 #eb5d35; }
+@keyframes support-sign { 0%, 95%, 98% { opacity: 1; } 96%, 99% { opacity: 0.55; } }
+
+@media (max-width: 800px) {
+  .pond { height: 380px; }
+  .pond-panel { min-width: 0; }
+  .environment-control { margin-left: 0; flex-direction: column; align-items: flex-start; gap: 0.2rem; }
+  .hell .hell-signs { left: 57%; right: 8px; font-size: 8px; }
+  .hell-motto { padding: 5px; }
+  .hell-queue { font-size: 7px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fish, .line { transition: none; }
+  .result.win { animation: none; }
+  .fish.fighting .body, .fish.escaped .body { animation: none; }
+  .space.casting .blaster-flash { animation: none; opacity: 0.6; }
+  .hell-motto { animation: none; }
+}

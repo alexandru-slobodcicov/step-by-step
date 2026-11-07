@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#adc6cd"/><stop offset="1" stop-color="#e5e5ce"/></linearGradient>
+    <linearGradient id="lake" x2="0" y2="1"><stop stop-color="#7daba6"/><stop offset="1" stop-color="#224e50"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".09"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+    <g id="tree"><path d="m0 0-24 62h13l-24 37h21l-25 38h78l-25-38h21L11 62h13z"/><path d="M-4 122h8v35h-8z"/></g>
+  </defs>
+  <g filter="url(#grain)">
+    <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+    <circle cx="1215" cy="202" r="77" fill="#f2e9c9"/>
+    <path fill="#9cafa9" d="m0 541 196-235 139 150 219-290 219 286 195-215 229 238 187-171 216 226v470H0z"/>
+    <path fill="#647e7d" d="m0 579 258-262 244 292 306-355 300 344 218-183 274 218v367H0z"/>
+    <path fill="#f1eddb" d="m554 166-119 157 74-32 45 35 33-38 58 38zm254 88-113 131 72-34 41 29 29-35 74 28zm-550 63-81 82 58-23 25 19 26-21 45 26z"/>
+    <path fill="#3e6260" d="m0 523 139 69 200-41 189 91 211-27 206 30 183-82 232 41 240-103v499H0z"/>
+    <path fill="url(#lake)" d="M0 694q391-62 800 0t800-4v310H0z"/>
+    <path fill="#b6c6b3" opacity=".16" d="m339 704 163 234 306-224 300 222 218-220-218 112-300-78-306 76z"/>
+    <g fill="none" stroke="#d9e0c7" stroke-width="3" opacity=".3">
+      <path d="M417 747h360m177 0h248M220 799h416m180 0h540M343 862h543m111 0h256M507 940h571"/>
+    </g>
+    <path fill="#264944" d="m0 743 178 1 138 99-36 157H0zm1600-43-135 43-141 155-80 102h356z"/>
+    <g fill="#203e38">
+      <use href="#tree" transform="translate(50 411) scale(2.7)"/><use href="#tree" transform="translate(163 524) scale(1.6)"/>
+      <use href="#tree" transform="translate(252 653) scale(1.1)"/><use href="#tree" transform="translate(1532 418) scale(2.9)"/>
+      <use href="#tree" transform="translate(1419 585) scale(1.8)"/><use href="#tree" transform="translate(1332 741) scale(1.1)"/>
+    </g>
+    <path fill="#d3a675" d="m861 861 80 1-17 14h-45z"/>
+    <path fill="none" stroke="#d3a675" stroke-width="4" d="m904 850 34 35"/>
+    <circle cx="903" cy="843" r="6" fill="#2b4642"/>
+    <path stroke="#2b4642" stroke-width="8" d="m903 849 3 14"/>
+  </g>
+</svg>

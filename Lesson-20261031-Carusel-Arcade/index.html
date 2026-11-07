@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Three illustrated escapes. A little inspiration for your next adventure.">
+  <title>Elsewhere - A Little Further From Ordinary</title>
+  <link rel="stylesheet" href="./game.css">
+  <script src="./arcade-audio.js" defer></script>
+  <script src="./game.js" defer></script>
+  <script src="./pacman.js" defer></script>
+  <script src="./duckhunt.js" defer></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f2e9;
+      --ink: #293d33;
+      --muted: #70766b;
+      --line: #d8d9cc;
+      --accent: #d9e4b6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(ellipse at 90% 0%, #e6ead8 0, transparent 45%), var(--paper);
+      font-family: "Trebuchet MS", sans-serif;
+    }
+    button { font: inherit; }
+    button:focus-visible, a:focus-visible { outline: 3px solid var(--ink); outline-offset: 5px; }
+    .page { max-width: 1440px; padding: 0 64px; margin: auto; }
+    header { display: flex; justify-content: space-between; align-items: center; min-height: 108px; border-bottom: 1px solid var(--line); }
+    .wordmark { color: var(--ink); text-decoration: none; font: bold 30px Georgia, serif; letter-spacing: -1.5px; }
+    .wordmark span { color: #87986b; }
+    .header-note, .eyebrow, .category, .footer-note { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+    .header-note { display: flex; align-items: center; gap: 10px; color: var(--muted); }
+    .header-note::before { content: ""; width: 7px; height: 7px; background: #829366; border-radius: 50%; }
+    .intro { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; padding: 55px 0 36px; }
+    .eyebrow { color: var(--muted); margin: 0 0 16px; }
+    h1 { margin: 0; font: normal clamp(38px, 4.5vw, 65px)/1.05 Georgia, serif; letter-spacing: -2.5px; }
+    h1 em { color: #7b8964; }
+    .intro-copy { max-width: 255px; margin: 0 0 4px; font-size: 13px; line-height: 1.8; color: var(--muted); }
+    .carusel { position: relative; }
+    .viewport { position: relative; overflow: hidden; border-radius: 8px; background: #3e6260; touch-action: pan-y; }
+    .slide { display: none; position: relative; height: clamp(360px, 43vw, 570px); cursor: pointer; }
+    .slide.activ { display: block; }
+    .slide:focus-visible { outline: 3px solid #fff1c9; outline-offset: -6px; }
+    .slide img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .slide::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #152b2410 30%, #142a24b8 100%); pointer-events: none; }
+    .slide.activ img { animation: reveal .65s ease-out both; }
+    .slide.activ .caption { animation: rise .5s ease-out both; }
+    .caption { position: absolute; bottom: 42px; left: 44px; right: 120px; color: #fff9e9; z-index: 1; }
+    .category { margin: 0 0 14px; color: #e1e9ce; }
+    h2 { margin: 0 0 12px; font: normal clamp(34px, 4.2vw, 57px)/1.05 Georgia, serif; letter-spacing: -1.5px; }
+    .caption p:last-child { margin: 0; max-width: 380px; font-size: 13px; line-height: 1.7; color: #f2f0de; }
+    .image-label { position: absolute; top: 24px; left: 26px; z-index: 2; padding: 9px 13px; border: 1px solid #ffffff60; border-radius: 30px; background: #f5f2e91a; color: #fff9e9; font-size: 10px; letter-spacing: 1.4px; text-transform: uppercase; }
+    .image-count { position: absolute; bottom: 44px; right: 36px; z-index: 2; color: #fff9e9; font: italic 26px Georgia, serif; }
+    .image-count span { font: 12px "Trebuchet MS", sans-serif; opacity: .65; }
+    .image-label, .image-count { pointer-events: none; }
+    .controls { display: flex; justify-content: space-between; align-items: center; min-height: 88px; border-bottom: 1px solid var(--line); gap: 16px; }
+    .slide-status { display: flex; align-items: center; gap: 17px; min-width: 240px; font-size: 12px; }
+    .status-number { color: var(--muted); font-size: 11px; }
+    .dots { display: flex; align-items: center; gap: 2px; }
+    .dot { width: 32px; height: 40px; display: grid; place-items: center; border: 0; padding: 0; background: transparent; cursor: pointer; }
+    .dot::after { content: ""; width: 6px; height: 6px; border-radius: 8px; background: #bfc5b5; transition: width .2s, background .2s; }
+    .dot[aria-current="true"]::after { width: 24px; background: var(--ink); }
+    .arrows { display: flex; gap: 10px; }
+    .arrow { display: grid; place-items: center; width: 43px; height: 43px; border: 1px solid #cbd0bf; border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; transition: background .2s; }
+    .arrow:last-child { background: var(--accent); border-color: var(--accent); }
+    .arrow:hover { background: #c9d5b1; }
+    .arrow svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+    footer { display: flex; justify-content: space-between; align-items: center; padding: 24px 0 30px; gap: 20px; color: var(--muted); }
+    footer p { margin: 0; font-size: 12px; }
+    .footer-note { font-size: 9px; letter-spacing: 1.5px; }
+    @keyframes reveal { from { opacity: .5; transform: scale(1.035); } to { opacity: 1; transform: scale(1); } }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @media (min-width: 1500px) { .intro { padding-top: 65px; } }
+    @media (max-width: 700px) {
+      .page { padding: 0 22px; }
+      header { min-height: 82px; }
+      .wordmark { font-size: 27px; }
+      .header-note { font-size: 8px; letter-spacing: 1px; }
+      .intro { display: block; padding: 36px 0 26px; }
+      h1 { letter-spacing: -1.5px; }
+      .intro-copy { margin-top: 18px; max-width: 310px; }
+      .slide { height: 440px; }
+      .caption { left: 24px; bottom: 30px; right: 40px; }
+      .caption p:last-child { max-width: 255px; font-size: 12px; }
+      .image-count { right: 20px; bottom: 23px; font-size: 20px; }
+      .image-label { top: 20px; left: 20px; }
+      .slide-status { min-width: 0; gap: 9px; font-size: 11px; }
+      .status-number { display: none; }
+      .controls { gap: 8px; }
+      .dot { width: 25px; }
+      .arrow { width: 38px; height: 38px; }
+      .arrows { gap: 6px; }
+      footer { align-items: flex-start; }
+      .footer-note { max-width: 110px; text-align: right; line-height: 1.8; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <a class="wordmark" href="./index.html" aria-label="Elsewhere home">elsewhere<span>.</span></a>
+      <div class="header-note">A collection of escapes</div>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">Less scrolling. More wandering.</p>
+          <h1 id="page-title">A little further<br>from <em>ordinary.</em></h1>
+        </div>
+        <p class="intro-copy">Places to get lost. Moments to slow down.<br>A little inspiration for wherever comes next.</p>
+      </section>
+      <section class="carusel" aria-label="Arcade games" aria-roledescription="carousel">
+        <div class="viewport">
+          <div class="image-label" id="slide-hint">Click pe imagine pentru a juca</div>
+          <div class="slide activ" id="play-game" role="button" tabindex="0" aria-label="Joaca Mario (1 din 3)" aria-describedby="slide-hint" aria-haspopup="dialog">
+            <img src="./mario.svg" alt="Mario cu sapca rosie si salopeta albastra, langa monede si blocuri de caramida." width="1600" height="1000" fetchpriority="high">
+            <div class="caption">
+              <p class="category">01 / Platformer arcade</p>
+              <h2>Aventura lui Mario.</h2>
+              <p>Sari, aduna monede si invinge inamicii.<br>O aventura pixelata, acum cu sunete!</p>
+            </div>
+          </div>
+          <div class="slide" id="play-pacman" role="button" tabindex="0" aria-label="Joaca Pac-Man (2 din 3)" aria-describedby="slide-hint" aria-haspopup="dialog">
+            <img src="./pacman.svg" alt="Pac-Man galben, puncte aurii si fantome colorate intr-un labirint arcade." width="1600" height="1000">
+            <div class="caption">
+              <p class="category">02 / Labirint arcade</p>
+              <h2>Inca un punct.</h2>
+              <p>Aduna toate punctele. Evita fantomele.<br>Prinde o super-bila si intoarce jocul!</p>
+            </div>
+          </div>
+          <div class="slide" id="play-duckhunt" role="button" tabindex="0" aria-label="Joaca Duck Hunt (3 din 3)" aria-describedby="slide-hint" aria-haspopup="dialog">
+            <img src="./duckhunt.svg" alt="Doua rate in zbor si un caine care rade in iarba, intr-un peisaj Duck Hunt." width="1600" height="1000">
+            <div class="caption">
+              <p class="category">03 / Tinteste si trage</p>
+              <h2>Nu rata momentul.</h2>
+              <p>Doua rate. Trei cartuse. Un caine pus pe ras.<br>Ai o tinta mai buna decat crede el?</p>
+            </div>
+          </div>
+          <div class="image-count" aria-hidden="true">01 <span>/ 03</span></div>
+        </div>
+        <div class="controls">
+          <div class="slide-status" aria-live="polite" aria-atomic="true"><span class="status-number">01 / 03</span><span class="status-title">Mario</span></div>
+          <div class="dots" role="group" aria-label="Choose a slide">
+            <button class="dot" type="button" aria-label="Show slide 1: Mario" aria-current="true"></button>
+            <button class="dot" type="button" aria-label="Show slide 2: Pac-Man" aria-current="false"></button>
+            <button class="dot" type="button" aria-label="Show slide 3: Duck Hunt" aria-current="false"></button>
+          </div>
+          <div class="arrows">
+            <button class="arrow prev" type="button" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m13 5-7 7 7 7M6 12h14"/></svg></button>
+            <button class="arrow next" type="button" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m11 5 7 7-7 7M18 12H4"/></svg></button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>A change of scenery changes everything.</p>
+      <span class="footer-note">Made for the wandering mind</span>
+    </footer>
+  </div>
+  <dialog id="game-dialog" aria-labelledby="game-title" aria-describedby="game-instructions">
+    <div class="game-shell">
+      <div class="game-heading">
+        <div><p class="eyebrow">Elsewhere / Arcade</p><h2 id="game-title">Aventura lui Mario</h2></div>
+        <button class="game-close" id="game-close" type="button" aria-label="Inchide jocul">&#10005;</button>
+      </div>
+      <div class="game-toolbar">
+        <p id="game-score">Monede: 0 / 12 &middot; Vieti: 3</p>
+        <div><button id="game-sound" type="button" aria-pressed="true">Sunet: pornit</button><button id="game-pause" type="button">Pauza</button><button id="game-restart" type="button">Reincepe</button></div>
+      </div>
+      <canvas id="game-canvas" width="960" height="480" tabindex="0" aria-label="Joc platformer. Deplasare cu sagetile sau A si D; sari cu Spatiu, W sau sageata sus.">
+        Browserul tau nu suporta Canvas. Incearca un browser modern pentru a juca.
+      </canvas>
+      <p id="game-message" role="status" aria-live="polite">Aduna monede, sari peste inamici si ajungi la steag!</p>
+      <div class="game-bottom">
+        <p id="game-instructions">A / D sau sageti: miscare &middot; Spatiu / W: sari<br>P: pauza &middot; R: reincepe &middot; Esc: inchide</p>
+        <div class="game-touch" aria-label="Comenzi tactile">
+          <button type="button" data-game-key="left" aria-label="Mergi la stanga">&#8592;</button>
+          <button type="button" data-game-key="right" aria-label="Mergi la dreapta">&#8594;</button>
+          <button type="button" data-game-key="jump" aria-label="Sari">Sari &#8593;</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="pacman-dialog" aria-labelledby="pacman-title" aria-describedby="pacman-instructions">
+    <div class="game-shell">
+      <div class="game-heading">
+        <div><p class="eyebrow">Elsewhere / Arcade 02</p><h2 id="pacman-title">Pac-Man</h2></div>
+        <button class="game-close" id="pacman-close" type="button" aria-label="Inchide Pac-Man">&#10005;</button>
+      </div>
+      <div class="game-toolbar">
+        <p id="pacman-score">Scor: 0 &middot; Vieti: 3</p>
+        <div><button id="pacman-sound" type="button" aria-pressed="true">Sunet: pornit</button><button id="pacman-pause" type="button">Pauza</button><button id="pacman-restart" type="button">Reincepe</button></div>
+      </div>
+      <canvas id="pacman-canvas" width="504" height="552" tabindex="0" aria-label="Pac-Man. Foloseste sagetile sau W A S D ca sa aduni punctele si sa eviti fantomele.">
+        Browserul tau nu suporta Canvas.
+      </canvas>
+      <p id="pacman-message" role="status" aria-live="polite">Aduna toate punctele si evita fantomele!</p>
+      <div class="game-bottom">
+        <p id="pacman-instructions">Sageti / W A S D: miscare<br>P: pauza &middot; R: reincepe &middot; Esc: inchide</p>
+        <div class="game-touch pacman-touch" aria-label="Comenzi tactile Pac-Man">
+          <button type="button" data-pacman-dir="left" aria-label="Stanga">&#8592;</button>
+          <button type="button" data-pacman-dir="up" aria-label="Sus">&#8593;</button>
+          <button type="button" data-pacman-dir="down" aria-label="Jos">&#8595;</button>
+          <button type="button" data-pacman-dir="right" aria-label="Dreapta">&#8594;</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+  <dialog id="duckhunt-dialog" aria-labelledby="duckhunt-title" aria-describedby="duckhunt-instructions">
+    <div class="game-shell">
+      <div class="game-heading">
+        <div><p class="eyebrow">Elsewhere / Arcade 03</p><h2 id="duckhunt-title">Vanatorul de rate</h2></div>
+        <button class="game-close" id="duckhunt-close" type="button" aria-label="Inchide Duck Hunt">&#10005;</button>
+      </div>
+      <div class="game-toolbar">
+        <p id="duckhunt-score">Scor: 0 &middot; Runda: 1 / 10 &middot; Cartuse: 3</p>
+        <div><button id="duckhunt-sound" type="button" aria-pressed="true">Sunet: pornit</button><button id="duckhunt-pause" type="button">Pauza</button><button id="duckhunt-restart" type="button">Reincepe</button></div>
+      </div>
+      <canvas id="duckhunt-canvas" width="960" height="540" tabindex="0" aria-label="Duck Hunt. Click sau atinge ratele. Din tastatura: sageti pentru tinta, Spatiu pentru a trage.">
+        Browserul tau nu suporta Canvas.
+      </canvas>
+      <p id="duckhunt-message" role="status" aria-live="polite">Nimereste cel putin 12 din 20 de rate in 10 runde!</p>
+      <div class="game-bottom">
+        <p id="duckhunt-instructions">Click / atingere: trage &middot; Sageti / W A S D: tinta &middot; Spatiu: trage<br>3 cartuse pe runda &middot; P: pauza &middot; R: reincepe &middot; Esc: inchide</p>
+      </div>
+    </div>
+  </dialog>
+  <script>
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".dot");
+    const titles = ["Mario", "Pac-Man", "Duck Hunt"];
+    let index = 0;
+
+    function arata(i) {
+      slides[index].classList.remove("activ");
+      index = (i + slides.length) % slides.length;
+      slides[index].classList.add("activ");
+      dots.forEach((dot, i) => dot.setAttribute("aria-current", String(i === index)));
+      const number = String(index + 1).padStart(2, "0");
+      document.querySelector(".image-count").innerHTML = `${number} <span>/ 03</span>`;
+      document.querySelector(".status-number").textContent = `${number} / 03`;
+      document.querySelector(".status-title").textContent = titles[index];
+    }
+
+    document.querySelector(".prev").onclick = () => arata(index - 1);
+    document.querySelector(".next").onclick = () => arata(index + 1);
+    dots.forEach((dot, i) => { dot.onclick = () => arata(i); });
+
+    slides.forEach(slide => {
+      slide.onkeydown = event => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (!event.repeat) slide.click();
+      };
+    });
+    document.querySelector(".carusel").onkeydown = event => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      arata(index + (event.key === "ArrowRight" ? 1 : -1));
+      slides[index].focus();
+    };
+  </script>
+</body>
+</html>

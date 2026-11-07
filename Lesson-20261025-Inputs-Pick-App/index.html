@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gone Fishing - Random Winner Picker</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1 id="page-title">Gone Fishing</h1>
+    <p id="page-description">Add participants, cast the line, and see who gets caught!</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Participants</h2>
+      <form id="add-form">
+        <input id="name-input" type="text" placeholder="Enter a name" aria-label="Participant name" autocomplete="off" />
+        <button type="submit">Add</button>
+      </form>
+
+      <label for="bulk-input" class="hint">Or paste a list (one name per line or comma-separated):</label>
+      <textarea id="bulk-input" rows="4" placeholder="Alice&#10;Bob&#10;Charlie"></textarea>
+      <button id="bulk-add" type="button" class="secondary">Add list</button>
+
+      <ul id="people-list"></ul>
+      <p id="count" class="hint"></p>
+
+      <p id="game-hint" class="hint">Sharks, sea bass &amp; clownfish all put up a fight! A 30% chance to escape; landed fish leave the pond for good.</p>
+
+      <div class="actions">
+        <button id="cast-btn" type="button" class="primary">Cast the line</button>
+        <button id="clear-btn" type="button" class="danger">Clear all</button>
+      </div>
+    </section>
+
+    <section class="panel pond-panel">
+      <div class="pond-toolbar">
+        <span class="pond-badge">LIVE POND / 3D</span>
+        <label class="environment-control" for="environment">
+          Environment
+          <select id="environment">
+            <option value="fish-pond">Fish Pond</option>
+            <option value="star-wars">Star Wars</option>
+            <option value="hell-support">Hell's Customer Support</option>
+          </select>
+        </label>
+        <button id="sound-btn" type="button" class="secondary" aria-pressed="false">Sound: on</button>
+      </div>
+      <div id="pond" class="pond" role="img" aria-label="A fisherman casting into a 3D pond of participant fish">
+        <svg class="space-sky" viewBox="0 0 900 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <defs>
+            <pattern id="stars" width="113" height="91" patternUnits="userSpaceOnUse">
+              <circle cx="8" cy="17" r="1" fill="#fff5d6" />
+              <circle cx="43" cy="68" r="0.7" fill="#c2dfff" />
+              <circle cx="95" cy="38" r="1.2" fill="#eefaff" />
+              <circle cx="72" cy="5" r="0.6" fill="#ffffff" />
+              <circle cx="23" cy="82" r="0.5" fill="#ffffff" />
+            </pattern>
+            <radialGradient id="galaxy-glow">
+              <stop stop-color="#fff0c8" stop-opacity="0.8" />
+              <stop offset="0.17" stop-color="#82c3ff" stop-opacity="0.35" />
+              <stop offset="1" stop-color="#3369bb" stop-opacity="0" />
+            </radialGradient>
+            <radialGradient id="planet-shade" cx="30%" cy="20%">
+              <stop stop-color="#bdc9da" /><stop offset="1" stop-color="#182338" />
+            </radialGradient>
+          </defs>
+          <rect width="900" height="460" fill="url(#stars)" />
+          <g transform="translate(690 108) rotate(-24)">
+            <ellipse rx="205" ry="98" fill="url(#galaxy-glow)" />
+            <g fill="none" stroke="#9bc9ed" stroke-opacity="0.3" stroke-width="5" transform="scale(1 0.6)">
+              <path id="galaxy-arm" d="M0 0C15-12 35-4 27 11C7 35-39 21-43-7C-54-54 31-69 73-30C131 24 40 91-49 63C-158 29-123-91-9-106C123-124 205-28 158 56" />
+              <use href="#galaxy-arm" transform="rotate(180)" />
+            </g>
+            <ellipse rx="23" ry="8" fill="#fff4dc" opacity="0.75" />
+          </g>
+          <g transform="translate(430 345) rotate(28)">
+            <ellipse rx="125" ry="45" fill="url(#galaxy-glow)" />
+            <path d="M-82 4Q0-44 77 3T-63 17" fill="none" stroke="#85b5e5" stroke-opacity="0.35" stroke-width="4" />
+          </g>
+          <circle cx="786" cy="365" r="39" fill="url(#planet-shade)" />
+          <ellipse cx="786" cy="365" rx="68" ry="12" fill="none" stroke="#a5c0d1" stroke-opacity="0.4" stroke-width="3" transform="rotate(-23 786 365)" />
+        </svg>
+        <svg class="hell-office" viewBox="0 0 900 460" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="lava-glow" x2="0" y2="1">
+              <stop stop-color="#ffbd57" /><stop offset="1" stop-color="#a62a21" />
+            </linearGradient>
+            <pattern id="cubicles" width="170" height="105" patternUnits="userSpaceOnUse">
+              <path d="M4 100V28h152v72M4 28L28 8h124v20" fill="#463d3a" stroke="#8c7563" stroke-width="3" />
+              <path d="M22 81h115v10H22z" fill="#a17b5e" />
+              <rect x="58" y="42" width="42" height="30" rx="3" fill="#171e1b" stroke="#877966" stroke-width="3" />
+              <path d="M78 72v10m-15 0h30" stroke="#ba9d75" stroke-width="3" />
+              <path d="M67 55h22m-22 7h14" stroke="#b3d07a" stroke-width="2" />
+              <path d="M119 64v16h11V64zm11 3q12 0 0 10" fill="none" stroke="#c9b698" stroke-width="3" />
+            </pattern>
+          </defs>
+          <rect width="900" height="190" fill="#302a2b" />
+          <path d="M330 0v155h570M350 0v135h550" fill="none" stroke="#695049" stroke-width="3" />
+          <rect x="390" y="50" width="510" height="105" fill="url(#cubicles)" opacity="0.55" />
+          <path d="M0 166Q180 145 300 180T610 172T900 164V460H0Z" fill="url(#lava-glow)" />
+          <g fill="none" stroke="#ffe2a1" stroke-width="3" opacity="0.45">
+            <path d="M0 245q100-30 220 6t240-5t250 3t200-4M-40 360q140-36 270 0t260 0t260 0t180 5" />
+            <ellipse cx="220" cy="288" rx="18" ry="5" /><ellipse cx="720" cy="385" rx="27" ry="7" />
+          </g>
+          <g fill="#ffdf93" opacity="0.55">
+            <circle cx="400" cy="330" r="6" /><circle cx="660" cy="235" r="4" /><circle cx="120" cy="410" r="8" />
+          </g>
+        </svg>
+        <div class="hell-signs" aria-hidden="true">
+          <span class="hell-motto">YOUR SUFFERING IS IMPORTANT TO US</span>
+          <span class="hell-queue">NOW SERVING: 000 &nbsp; / &nbsp; ON HOLD SINCE 1342</span>
+          <span class="hell-thermostat">OFFICE: 16&#176;C<br /><small>WHO TOUCHED THIS?</small></span>
+        </div>
+        <canvas id="pond-canvas" aria-hidden="true"></canvas>
+        <div class="water-light" aria-hidden="true"></div>
+        <svg class="fisherman" viewBox="0 0 240 145" role="img" aria-label="A fisherman sitting on a wooden dock, holding a fishing rod">
+          <ellipse cx="65" cy="127" rx="62" ry="9" fill="#123e4733" />
+          <path d="M14 114v27m83-27v27" stroke="#70543b" stroke-width="9" />
+          <path d="M0 109h123v12H0z" fill="#b98b58" />
+          <path d="M0 114h123m-99-5v12m29-12v12m29-12v12" stroke="#795d40" stroke-width="2" />
+          <path d="M50 91l29 3 6 21m-28-20 10 16 25 4" fill="none" stroke="#284f57" stroke-width="13" stroke-linecap="round" />
+          <path d="M82 116h13m-6 4h12" stroke="#263e3e" stroke-width="7" stroke-linecap="round" />
+          <path d="M47 64q18-7 25 13l-1 21H42z" fill="#d8853f" />
+          <path d="M58 63v-9" stroke="#e7b68a" stroke-width="10" />
+          <ellipse cx="60" cy="48" rx="13" ry="16" fill="#efc39a" />
+          <path d="M71 46l7 7-8 2" fill="#efc39a" />
+          <circle cx="68" cy="47" r="1.8" fill="#263e3e" />
+          <path d="M48 52q1 17 17 13l7-10q-13 5-15-5" fill="#e8e8d2" />
+          <path d="M43 38q0-22 21-17l12 17" fill="#758650" />
+          <ellipse cx="60" cy="38" rx="26" ry="5" fill="#a6ad70" />
+          <path d="M52 31h22" stroke="#485d42" stroke-width="4" />
+          <path d="M66 75l14 12 20-7" fill="none" stroke="#efc39a" stroke-width="9" stroke-linecap="round" />
+          <path d="M65 73l12 11" stroke="#d8853f" stroke-width="13" stroke-linecap="round" />
+          <g class="fisherman-rod">
+            <path d="M95 91Q144 30 218 18" fill="none" stroke="#263e3e" stroke-width="3" stroke-linecap="round" />
+            <path d="M95 91l16-18" stroke="#d7ae68" stroke-width="5" stroke-linecap="round" />
+            <circle cx="106" cy="88" r="6" fill="#b4c8c0" stroke="#284f57" stroke-width="2" />
+            <circle id="rod-tip" cx="218" cy="18" r="2" fill="#e4e9ce" />
+          </g>
+        </svg>
+        <svg class="r2d2" viewBox="0 0 240 145" role="img" aria-label="R2-D2-style astromech robot with a tractor blaster">
+          <ellipse cx="73" cy="130" rx="54" ry="8" fill="#52baff20" />
+          <path d="M36 66v48H25v15h28V68m47-2v48h13v15H87V68" fill="#b6c8dc" stroke="#647a99" stroke-width="3" />
+          <path d="M48 51V32a25 25 0 0 1 50 0v19" fill="#a6b9cf" stroke="#dbe8f5" stroke-width="2" />
+          <path d="M55 28l9-14m17 0 11 14M49 39h49" stroke="#3466b0" stroke-width="8" />
+          <rect x="47" y="48" width="52" height="68" rx="8" fill="#edf3f8" stroke="#879cb5" stroke-width="2" />
+          <path d="M48 53h49m-39 17h30m-30 11h30" stroke="#3466b0" stroke-width="7" />
+          <rect x="59" y="92" width="12" height="16" rx="2" fill="#3466b0" />
+          <path d="M79 92h11m-11 7h11m-11 7h11" stroke="#8c9fb3" stroke-width="3" />
+          <circle cx="81" cy="34" r="7" fill="#111e33" stroke="#4e73aa" stroke-width="3" />
+          <circle cx="60" cy="43" r="2.5" fill="#ff6754" />
+          <path d="M70 114l-3 12h17l-5-12" fill="#b4c8df" />
+          <path d="M97 73l19-19" stroke="#a5b9ce" stroke-width="9" stroke-linecap="round" />
+          <path d="M113 44h36v17h-36z" fill="#405575" stroke="#a3bdd4" stroke-width="2" />
+          <path d="M144 47h31v11h-31" fill="#788ea9" />
+          <path d="M151 49h25v6h-25" fill="#b7eaff" />
+          <circle id="blaster-tip" cx="176" cy="52" r="3" fill="#8bf1ff" />
+          <circle class="blaster-flash" cx="177" cy="52" r="9" fill="#6feaff" opacity="0" />
+        </svg>
+        <div class="support-station" aria-hidden="true"></div>
+        <svg class="support-demon" viewBox="18 5 222 140" role="img" aria-label="Junior demon with a headset, pitchfork and retractable ID badge">
+          <ellipse cx="83" cy="132" rx="74" ry="8" fill="#210d0d66" />
+          <path d="M18 114h118v16H18zM32 130v15m87-15v15" fill="#695149" stroke="#302a2a" stroke-width="5" />
+          <path d="M61 89l26 9 5 23m-21-25 1 26h18" fill="none" stroke="#373237" stroke-width="12" stroke-linecap="round" />
+          <path d="M51 63q19-11 31 7l-2 28H48z" fill="#ded0ad" />
+          <path d="M58 64v-9" stroke="#ca4e3b" stroke-width="10" />
+          <ellipse cx="64" cy="44" rx="17" ry="19" fill="#ef6548" stroke="#6f291f" stroke-width="1.5" />
+          <path d="M49 33L42 13l17 14m14 1 13-15-2 25" fill="#f2ca89" stroke="#9e4935" stroke-width="2" />
+          <path d="M47 44q-7-27 18-27t20 27" fill="none" stroke="#292b30" stroke-width="5" />
+          <rect x="44" y="36" width="8" height="17" rx="3" fill="#45464b" />
+          <path d="M48 51q4 12 22 8" fill="none" stroke="#292b30" stroke-width="3" />
+          <circle cx="71" cy="58" r="3" fill="#292b30" />
+          <path d="M57 39l8 3m7 0 7-3" stroke="#65291f" stroke-width="3" />
+          <ellipse cx="62" cy="46" rx="4" ry="3" fill="#fff0c6" /><ellipse cx="75" cy="46" rx="4" ry="3" fill="#fff0c6" />
+          <circle cx="63" cy="46" r="1.6" fill="#392a2a" /><circle cx="76" cy="46" r="1.6" fill="#392a2a" />
+          <path d="M65 54q6 3 11-1" fill="none" stroke="#752c22" stroke-width="2" />
+          <path d="M66 73l16 12 24-10" fill="none" stroke="#df6245" stroke-width="8" stroke-linecap="round" />
+          <path d="M58 65l8 19 7-18" fill="none" stroke="#8a392d" stroke-width="3" />
+          <rect x="59" y="82" width="17" height="21" rx="2" fill="#f9e9bf" />
+          <path d="M62 87h11m-11 5h8m-8 5h10" stroke="#8a392d" stroke-width="2" />
+          <path d="M44 87q-30 20-13-7l-8 3" fill="none" stroke="#ca4e3b" stroke-width="5" />
+          <g class="demon-pitchfork" stroke="#e9ba71" stroke-width="4" fill="none" stroke-linecap="round">
+            <path d="M101 90L204 26m-17-9 8 15 18 8m-26-23 2 9m15-10v10m16 6-7 8" />
+            <circle id="pitchfork-tip" cx="204" cy="26" r="3" fill="#ffe1a3" />
+          </g>
+          <rect x="19" y="120" width="114" height="23" rx="2" fill="#422b27" stroke="#b28762" stroke-width="2" />
+          <text x="76" y="130" text-anchor="middle" fill="#ffe0aa" font-size="7" font-family="monospace">AGENT 666</text>
+          <text x="76" y="138" text-anchor="middle" fill="#ffe0aa" font-size="6" font-family="monospace">JUNIOR DAMNAGER</text>
+        </svg>
+        <svg id="fishing-wire" class="fishing-wire" aria-hidden="true"><path id="wire-path" /></svg>
+        <div id="line" class="line"><div class="hook"></div></div>
+        <p id="pond-empty" class="pond-empty">Your next catch starts here.<br /><small>Add names to bring the pond to life.</small></p>
+      </div>
+      <div id="result" class="result" aria-live="polite">Ready when you are.</div>
+      <h3 id="history-heading">Catch history</h3>
+      <ol id="history"></ol>
+    </section>
+  </main>
+
+  <script src="rig.js"></script>
+  <script src="pond.js"></script>
+  <script src="sound.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

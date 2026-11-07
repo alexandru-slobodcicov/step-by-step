@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#c3ddd8"/><stop offset="1" stop-color="#f8e7bd"/></linearGradient>
+    <linearGradient id="sea" x2="0" y2="1"><stop stop-color="#6caeae"/><stop offset="1" stop-color="#204e57"/></linearGradient>
+    <linearGradient id="rock" x2="1" y2="1"><stop stop-color="#dab589"/><stop offset="1" stop-color="#8f654e"/></linearGradient>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency=".65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".09"/></feComponentTransfer><feBlend in="SourceGraphic" mode="soft-light"/></filter>
+  </defs>
+  <g filter="url(#grain)">
+    <path fill="url(#sky)" d="M0 0h1600v1000H0z"/>
+    <circle cx="1140" cy="235" r="99" fill="#fff0cc"/>
+    <path fill="#b5c7bc" d="m0 439 163-62 168 47 187-64 176 67 189-23 211 61 506-32v175H0z"/>
+    <path fill="url(#sea)" d="M0 488q370-34 790 0t810 0v512H0z"/>
+    <g fill="none" stroke="#d9e4cc" opacity=".42" stroke-width="3">
+      <path d="M722 566h490m60 0h179M561 619h339m111 0h445M675 690h530m72 0h323M410 774h260m169 0h567M654 872h457"/>
+    </g>
+    <path fill="url(#rock)" d="m0 295 161 38 76 116 114 52 20 143 102 50 33 151 149 155H0z"/>
+    <path fill="#697257" d="m0 273 168 41 87 116-72-17-68-57L0 345z"/>
+    <path fill="#f1d0a1" d="m0 585 112 22 93 90 112 26 19 142 143 135H0z"/>
+    <path fill="#967357" opacity=".5" d="m157 473 50 141 87 88-43-116zm174 244 44 134 97 67-54-117z"/>
+    <path fill="#e1c29b" d="m1213 1000 41-89 69-23 27-143 82-50 91 36 77 269z"/>
+    <path fill="#6c765b" d="m1321 757 106-80 96 39 77 65-134-27-64 32z"/>
+    <g fill="none" stroke="#f3ecd7" stroke-width="5" opacity=".7">
+      <path d="M502 943q98-76 165-54M1201 987q12-81 54-91"/>
+    </g>
+    <g fill="none" stroke="#526764" stroke-width="4" stroke-linecap="round">
+      <path d="m938 275 17-6 17 6m39 29 12-5 12 5"/>
+    </g>
+  </g>
+</svg>

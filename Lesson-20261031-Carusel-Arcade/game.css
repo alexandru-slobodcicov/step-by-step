@@ -1,0 +1,51 @@
+body:has(dialog[open]) { overflow: hidden; }
+#game-dialog, #pacman-dialog, #duckhunt-dialog {
+  width: min(1020px, calc(100% - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 1px solid #b6c4a4;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 32px 100px #152b2466;
+}
+#game-dialog::backdrop, #pacman-dialog::backdrop, #duckhunt-dialog::backdrop { background: #132b26c9; backdrop-filter: blur(7px); }
+#pacman-dialog { width: min(670px, calc(100% - 24px)); }
+.game-shell { padding: 24px; }
+.game-heading, .game-toolbar, .game-bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.game-heading .eyebrow { margin-bottom: 7px; font-size: 9px; }
+.game-heading h2 { font-size: 30px; margin: 0; letter-spacing: -1px; }
+.game-close { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; background: transparent; color: var(--ink); cursor: pointer; }
+.game-toolbar { padding: 18px 0 12px; }
+.game-toolbar p { margin: 0; font-size: 13px; font-weight: bold; }
+.game-toolbar > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.game-toolbar button { padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; background: transparent; color: var(--ink); cursor: pointer; }
+.game-toolbar button:hover, .game-close:hover { background: var(--accent); }
+#game-canvas { display: block; width: 100%; height: auto; border-radius: 6px; image-rendering: pixelated; background: #9ed7e5; touch-action: none; }
+#game-message { min-height: 20px; margin: 13px 0 8px; font-size: 13px; font-weight: bold; }
+#game-instructions { font-size: 11px; line-height: 1.8; color: var(--muted); margin: 0; }
+#pacman-canvas { display: block; width: auto; max-width: 100%; height: auto; max-height: 56dvh; margin: auto; border-radius: 6px; background: #102328; touch-action: none; }
+#pacman-message { min-height: 20px; margin: 13px 0 8px; font-size: 13px; font-weight: bold; }
+#pacman-instructions { font-size: 11px; line-height: 1.8; color: var(--muted); margin: 0; }
+#duckhunt-canvas { display: block; width: 100%; height: auto; border-radius: 6px; background: #9ed7df; cursor: crosshair; touch-action: none; }
+#duckhunt-message { min-height: 20px; margin: 13px 0 8px; font-size: 13px; font-weight: bold; }
+#duckhunt-instructions { font-size: 11px; line-height: 1.8; color: var(--muted); margin: 0; }
+.game-touch { display: flex; gap: 7px; flex-shrink: 0; }
+.game-touch button { min-width: 46px; height: 44px; padding: 0 12px; border: 1px solid #c1cbb2; border-radius: 6px; background: #e1e8d1; color: var(--ink); font-weight: bold; touch-action: none; user-select: none; -webkit-user-select: none; cursor: pointer; }
+.game-touch button:active { background: #bbcda2; }
+@media (max-width: 700px) {
+  .game-shell { padding: 14px; }
+  .game-heading h2 { font-size: 24px; }
+  .game-toolbar p, .game-toolbar button { font-size: 11px; }
+  .game-toolbar button { padding: 7px; }
+  .game-toolbar { flex-wrap: wrap; gap: 9px; }
+  .pacman-touch { justify-content: center; }
+  #play-game img { object-position: 66% center; }
+  #play-pacman img { object-position: 65% center; }
+  #play-duckhunt img { object-position: 68% center; }
+  .game-bottom { flex-wrap: wrap; }
+  .game-touch { width: 100%; justify-content: flex-end; }
+  .game-touch button { min-width: 58px; height: 48px; }
+  #game-message { font-size: 12px; }
+  .caption { bottom: 36px; }
+}
